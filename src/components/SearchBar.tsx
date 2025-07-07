@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { StockData } from "../types/stock";
 import axios from "axios";
+import type { StockData } from "../types/stock";
 
 interface SearchBarProps {
   onAdd: (stock: StockData) => void;
@@ -26,23 +26,23 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
       );
 
       const data = response.data;
-      console.log("Received API data:", data);
 
-      if (data && data.symbol && data.close) {
+      // ✅ Updated check
+      if (data && !data.status && data.close) {
         const stock: StockData = {
           symbol: data.symbol,
-          name: data.name,
+          name: data.name || data.symbol,
           price: parseFloat(data.close),
-          change: data.percent_change ? parseFloat(data.percent_change) : undefined,
+          change: parseFloat(data.percent_change),
         };
 
         onAdd(stock);
       } else {
-        setError("Invalid stock data received from API.");
+        setError("Stock not found or invalid symbol");
       }
     } catch (err) {
-      setError("Failed to fetch stock data. Try again.");
-      console.error("API fetch error:", err);
+      setError("Failed to fetch stock data. Try again later.");
+      console.error(err);
     } finally {
       setLoading(false);
       setQuery("");
@@ -53,20 +53,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
     <form onSubmit={handleSubmit} className="flex space-x-2 mb-8">
       <input
         type="text"
-        placeholder="Enter stock symbol (e.g. AAPL)"
+        placeholder="Search symbol (AAPL)"
         value={query}
         onChange={(e) => setQuery(e.target.value.toUpperCase())}
-        className="flex-grow px-4 py-2 rounded-md border border-gray-600 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+        className="flex-grow px-4 py-2 rounded-md border border-[#374151] bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         disabled={loading}
       />
       <button
         type="submit"
         disabled={loading}
-        className="px-6 py-2 bg-teal-500 hover:bg-teal-600 rounded-md text-white font-semibold disabled:opacity-50"
+        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold disabled:opacity-50"
       >
         {loading ? "Searching..." : "Add"}
       </button>
-
       {error && (
         <p className="text-red-500 ml-4 self-center font-medium">{error}</p>
       )}

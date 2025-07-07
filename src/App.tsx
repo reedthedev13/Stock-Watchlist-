@@ -1,4 +1,4 @@
-import { useState,  } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import Watchlist from "./components/Watchlist";
@@ -13,12 +13,17 @@ const App = () => {
     }
   };
 
+  const handleRemove = (symbol: string) => {
+    setWatchlist((prev) => prev.filter((stock) => stock.symbol !== symbol));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-[#111827] text-[#D1D5DB]">
+
       <Header />
       <main className="max-w-4xl mx-auto px-4 py-8">
         <SearchBar onAdd={handleAdd} />
-        <Watchlist stocks={watchlist} />
+        <Watchlist stocks={watchlist} onRemove={handleRemove} />
       </main>
     </div>
   );
