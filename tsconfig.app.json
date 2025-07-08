@@ -27,6 +27,6 @@
   },
   "include": [
     "src",
-    "api"
-  ]
+    "src/services/api"
+, "api"  ]
 }
