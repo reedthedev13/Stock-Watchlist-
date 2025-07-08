@@ -1,9 +1,13 @@
-
 const Header = () => (
-  <header className="bg-gray-800 py-4 shadow-md">
-    <div className="max-w-4xl mx-auto px-4 flex justify-between items-center">
-      <h1 className="text-3xl font-extrabold text-teal-400">📈 Stock Watchlist</h1>
-      <p className="text-sm text-gray-400">Powered by TwelveData</p>
+  <header className="bg-slate-800 py-5 shadow-lg">
+    <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
+      <h1 className="text-4xl font-extrabold text-blue-400 tracking-tight leading-none font-mono flex items-center space-x-2">
+        <span role="img" aria-label="chart">📈</span>
+        <span>Stock Watchlist</span>
+      </h1>
+      <p className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide select-none">
+        Powered by TwelveData
+      </p>
     </div>
   </header>
 );

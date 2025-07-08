@@ -18,7 +18,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#111827] text-[#D1D5DB]">
+    <div className="min-h-screen bg-slate-900 text-[#D1D5DB]">
 
       <Header />
       <main className="max-w-4xl mx-auto px-4 py-8">
