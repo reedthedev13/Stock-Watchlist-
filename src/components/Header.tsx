@@ -8,7 +8,7 @@ const Header = () => (
     className="bg-[#1C2541] py-5 shadow-md"
   >
     <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
-      <h1 className="text-3xl font-bold text-[#BFA974] font-mono tracking-tight hover:text-[#A8915B] transition duration-300">
+      <h1 className="text-3xl font-bold text-yellow-300 font-mono tracking-tight hover:text-[#A8915B] transition duration-300">
         <span role="img" aria-label="chart" className="mr-1">📈</span>
         Stock Watchlist
       </h1>
