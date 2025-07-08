@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import type { StockData } from "../types/stock";
+import axios from "axios";
 
 interface SearchBarProps {
   onAdd: (stock: StockData) => void;
@@ -27,12 +27,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
 
       const data = response.data;
 
-      // ✅ Updated check
-      if (data && !data.status && data.close) {
+      if (data && !data.status && data.price) {
         const stock: StockData = {
           symbol: data.symbol,
           name: data.name || data.symbol,
-          price: parseFloat(data.close),
+          price: parseFloat(data.price),
           change: parseFloat(data.percent_change),
         };
 
@@ -50,24 +49,24 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex space-x-2 mb-8">
+    <form onSubmit={handleSubmit} className="flex space-x-2 mb-8 max-w-md mx-auto">
       <input
         type="text"
-        placeholder="Search symbol (AAPL)"
+        placeholder="Enter stock symbol (e.g. AAPL)"
         value={query}
         onChange={(e) => setQuery(e.target.value.toUpperCase())}
-        className="flex-grow px-4 py-2 rounded-md border border-[#374151] bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex-grow px-4 py-2 rounded-md border border-[#33415C] bg-[#1C2541] text-[#FFDAB9] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFB347]"
         disabled={loading}
       />
       <button
         type="submit"
         disabled={loading}
-        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold disabled:opacity-50"
+        className="px-6 py-2 bg-[#FFB347] hover:bg-[#FFDAB9] text-[#1C2541] rounded-md font-semibold disabled:opacity-50 transition-colors duration-300"
       >
         {loading ? "Searching..." : "Add"}
       </button>
       {error && (
-        <p className="text-red-500 ml-4 self-center font-medium">{error}</p>
+        <p className="text-red-400 ml-4 self-center font-medium">{error}</p>
       )}
     </form>
   );
