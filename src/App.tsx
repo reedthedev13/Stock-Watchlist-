@@ -8,8 +8,10 @@ const App = () => {
   const [watchlist, setWatchlist] = useState<StockData[]>([]);
 
   const handleAdd = (stock: StockData) => {
-    if (!watchlist.some((s) => s.symbol === stock.symbol)) {
-      setWatchlist([stock, ...watchlist]);
+    // Normalize symbol to avoid duplicates with different casing/spaces
+    const normalizedSymbol = stock.symbol.trim().toUpperCase();
+    if (!watchlist.some((s) => s.symbol.trim().toUpperCase() === normalizedSymbol)) {
+      setWatchlist([{ ...stock, symbol: normalizedSymbol }, ...watchlist]);
     }
   };
 

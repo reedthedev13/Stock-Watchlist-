@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { StockData } from "../types/stock";
-import axios from "axios";
 
 interface SearchBarProps {
   onAdd: (stock: StockData) => void;
@@ -11,8 +10,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_KEY = import.meta.env.VITE_TWELVE_DATA_API_KEY;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -21,22 +18,23 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `https://api.twelvedata.com/quote?symbol=${query.toUpperCase()}&apikey=${API_KEY}`
+      const apiKey = import.meta.env.VITE_TWELVE_DATA_API_KEY;
+      const symbol = query.toUpperCase();
+
+      const response = await fetch(
+        `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${apiKey}`
       );
+      const data = await response.json();
 
-      const data = response.data;
-
-      if (data.status === "error") {
-        setError(data.message || "Stock not found or invalid symbol");
+      if (data.status === "error" || data.message) {
+        setError(data.message || "Stock not found");
         setLoading(false);
         return;
       }
 
-      // Use fallback fields for price if needed
       const priceString = data.price ?? data.close ?? data.open;
 
-      if (!priceString || isNaN(parseFloat(priceString))) {
+      if (!priceString || isNaN(Number(priceString))) {
         setError("Invalid data received from API");
         setLoading(false);
         return;
@@ -45,10 +43,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
       const stock: StockData = {
         symbol: data.symbol,
         name: data.name || data.symbol,
-        price: parseFloat(priceString),
-        change: data.percent_change ? parseFloat(data.percent_change) : 0,
+        price: Number(priceString),
+        change: data.percent_change ? Number(data.percent_change) : 0,
       };
 
+      console.log("Data passed to onAdd:", stock);
       onAdd(stock);
     } catch (err) {
       setError("Failed to fetch stock data. Try again later.");
@@ -76,7 +75,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAdd }) => {
       >
         {loading ? "Searching..." : "Add"}
       </button>
-
       {error && (
         <p className="text-red-500 ml-4 self-center font-medium">{error}</p>
       )}
